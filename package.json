@@ -1,0 +1,31 @@
+{
+  "name": "maplibre-gl-dot-density",
+  "version": "0.0.1",
+  "description": "MapLibre/Mapbox custom layer for stochastic polygon dot density from vector tiles.",
+  "license": "MIT",
+  "type": "module",
+  "module": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build:demo": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "maplibre-gl": ">=4 <7"
+  },
+  "dependencies": {
+    "@mapbox/vector-tile": "^2.0.4",
+    "earcut": "^3.0.1",
+    "pbf": "^4.0.1",
+    "pmtiles": "^4.3.0"
+  },
+  "devDependencies": {
+    "@types/earcut": "^3.0.0",
+    "maplibre-gl": "^5.7.0",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.0"
+  }
+}

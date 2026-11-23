@@ -1,0 +1,14 @@
+node_modules/
+dist/
+demo/dist
+demo/public/*.pmtiles
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+.env
+.env.local
+.env.*.local
+.venv/
+package-lock.json
+docs/design*.md
