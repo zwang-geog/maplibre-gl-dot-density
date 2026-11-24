@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/maplibre-gl-dot-density)](https://www.npmjs.com/package/maplibre-gl-dot-density)
 
-**Add a dot density layer to MapLibre GL JS or Mapbox GL JS that randomly paints 1-pixel dots inside polygons to show how densely a count (people, or anything else) is distributed.**
+**Add a dot density layer to MapLibre GL JS or Mapbox GL JS. It paints random 1-pixel dots inside polygons so populated places look lit and sparsely populated places look dim — for population density or any other geographic density.**
 
 ## Data
 
@@ -29,7 +29,7 @@ npm install maplibre-gl
 npm install mapbox-gl
 ```
 
-The layer needs **WebGL2** (MapLibre 4+ and current Mapbox GL JS provide it).
+**MapLibre v5 and v6 are not interchangeable.** v6 is ESM-only and, with Vite or another bundler, you must set the map worker URL (`setWorkerUrl`). Follow the [MapLibre install guide](https://maplibre.org/maplibre-gl-js/docs/#__tabbed_1_1) for the version and bundler you actually use.
 
 When you construct a **Mapbox** map, set `projection: "mercator"`. Most Mapbox styles default to globe; this layer only works in **Mercator**.
 
@@ -86,6 +86,10 @@ Each entry in `fields` is one **subcategory** (below high school, high school, s
 ```ts
 layer.setGroupVisible(3, false);
 ```
+
+
+> [!WARNING]
+> Do not interpret the map by counting dots in a polygon. The number of dots is an **approximation** meant for a quick look at the **general** population pattern, not a census of that feature. In very dense places the dots pack together and the picture is weaker than a choropleth of density, especially when you are zoomed out.
 
 ## Options
 

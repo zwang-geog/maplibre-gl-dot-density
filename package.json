@@ -17,6 +17,14 @@
   ],
   "author": "Zifan Wang",
   "license": "MIT",
+  "homepage": "https://github.com/zwang-geog/maplibre-gl-dot-density",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zwang-geog/maplibre-gl-dot-density.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zwang-geog/maplibre-gl-dot-density/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
