@@ -4,14 +4,10 @@ export type SourceConfig =
   | {
       type: "pmtiles";
       url: string;
-      minzoom?: number;
-      maxzoom?: number;
     }
   | {
       type: "xyz";
       tiles: string[];
-      minzoom?: number;
-      maxzoom?: number;
     };
 
 const pmtilesByUrl = new Map<string, PMTiles>();

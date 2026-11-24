@@ -16,7 +16,8 @@ import { readPmtilesZoomRange, type SourceConfig } from "./tiles/sources.ts";
 export interface DotDensityLayerOptions {
   id: string;
   source: SourceConfig;
-  sourceLayer: string;
+  /** MVT layer name inside each tile (Mapbox `source-layer`). */
+  "source-layer": string;
   /** Density field names (people / km²), one group each, at most 8. */
   fields?: string[];
   minzoom?: number;
@@ -58,17 +59,13 @@ interface Uniforms {
   layerHeight: WebGLUniformLocation | null;
 }
 
+/** MapLibre 5+ options object, or MapLibre 4 / Mapbox: the matrix is `args`. */
 function resolveMatrix(args: unknown): ArrayLike<number> {
-  if (args && typeof args === "object") {
-    const record = args as Record<string, unknown>;
-    const fromProjection = (record.defaultProjectionData as { mainMatrix?: ArrayLike<number> } | undefined)
-      ?.mainMatrix;
-    if (fromProjection) return fromProjection;
-    if (record.modelViewProjectionMatrix) {
-      return record.modelViewProjectionMatrix as ArrayLike<number>;
-    }
-  }
-  return args as ArrayLike<number>;
+  const a = args as {
+    defaultProjectionData?: { mainMatrix?: ArrayLike<number> };
+    modelViewProjectionMatrix?: ArrayLike<number>;
+  };
+  return a?.defaultProjectionData?.mainMatrix ?? a?.modelViewProjectionMatrix ?? (args as ArrayLike<number>);
 }
 
 function loc(gl: WebGL2RenderingContext, program: WebGLProgram, name: string): WebGLUniformLocation | null {
@@ -192,7 +189,7 @@ export class DotDensityLayer implements CustomLayerInterface {
       gl,
       program: this.program,
       source: this.options.source,
-      sourceLayer: this.options.sourceLayer,
+      sourceLayer: this.options["source-layer"],
       fields: this.options.fields ?? [],
       minzoom: minzoom ?? 0,
       maxzoom: maxzoom ?? 22,

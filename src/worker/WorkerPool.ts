@@ -6,6 +6,7 @@ import type {
   TileGeometryResult,
   WorkerInMessage,
 } from "./protocol.ts";
+import TileWorker from "./worker.ts?worker";
 
 export type TileWorkerResult = TileGeometryResult | TileEmptyResult | TileErrorResult;
 
@@ -27,9 +28,8 @@ export class WorkerPool {
   private inited = false;
 
   constructor(size = 2) {
-    const url = new URL("./worker.ts", import.meta.url);
     for (let i = 0; i < size; i++) {
-      const worker = new Worker(url, { type: "module" });
+      const worker = new TileWorker();
       // Main thread: handle the worker's result (or empty/error) for this requestId.
       worker.onmessage = (event: MessageEvent<TileWorkerResult>) => {
         const pending = this.pending.get(event.data.requestId);

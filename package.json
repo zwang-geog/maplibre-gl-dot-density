@@ -1,20 +1,53 @@
 {
   "name": "maplibre-gl-dot-density",
-  "version": "0.0.1",
-  "description": "MapLibre/Mapbox custom layer for stochastic polygon dot density from vector tiles.",
+  "version": "0.1.0",
+  "description": "Dot density layer for polygon vector tiles (PMTiles or XYZ). For MapLibre GL JS and Mapbox GL JS.",
+  "keywords": [
+    "dot-density",
+    "mapbox",
+    "mapbox-gl-js",
+    "maplibre",
+    "maplibre-gl-js",
+    "custom-layer",
+    "web-map",
+    "vector-tiles",
+    "pmtiles",
+    "mvt",
+    "webgl"
+  ],
+  "author": "Zifan Wang",
   "license": "MIT",
   "type": "module",
-  "module": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
+    "build": "vite build --config vite.lib.config.ts && tsc -p tsconfig.build.json && node scripts/rewrite-dts.mjs",
     "build:demo": "vite build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
+    "mapbox-gl": ">=3",
     "maplibre-gl": ">=4 <7"
+  },
+  "peerDependenciesMeta": {
+    "mapbox-gl": {
+      "optional": true
+    },
+    "maplibre-gl": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@mapbox/vector-tile": "^2.0.4",
@@ -24,8 +57,9 @@
   },
   "devDependencies": {
     "@types/earcut": "^3.0.0",
+    "mapbox-gl": "^3.35.2",
     "maplibre-gl": "^5.7.0",
-    "typescript": "^5.6.3",
+    "typescript": "~5.7.3",
     "vite": "^6.0.0"
   }
 }

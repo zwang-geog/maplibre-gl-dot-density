@@ -20,7 +20,7 @@ const map = new maplibregl.Map({
 const layer = new DotDensityLayer({
   id: "education-dots",
   source: { type: "pmtiles", url: new URL("/counties_edu.pmtiles", window.location.origin).href },
-  sourceLayer: "counties",
+  "source-layer": "counties",
   fields: GROUPS.map((g) => g.field),
   colors: GROUPS.map((g) => g.color),
   dotValue: 200,
