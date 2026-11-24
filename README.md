@@ -4,6 +4,8 @@
 
 **Add a dot density layer to MapLibre GL JS or Mapbox GL JS. It paints random 1-pixel dots inside polygons so populated places look lit and sparsely populated places look dim — for population density or any other geographic density.**
 
+[Live Demo](https://zwang-geog.github.io/maplibre-gl-dot-density/)
+
 ## Data
 
 The layer does not take GeoJSON at runtime. It reads **polygon vector tiles** whose attributes are already **densities**, not raw counts.
