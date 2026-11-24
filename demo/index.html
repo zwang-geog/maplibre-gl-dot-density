@@ -1,51 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Educational attainment - dot density</title>
-    <style>
-      html, body, #map { margin: 0; height: 100%; }
-      #hud {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        z-index: 1;
-        font: 12px/1.45 ui-monospace, monospace;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 8px 10px;
-        border-radius: 6px;
-        max-width: 24rem;
-      }
-      #legend { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-      #legend button {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        font: inherit;
-        cursor: pointer;
-        border: 1px solid #bbb;
-        background: #fff;
-        border-radius: 4px;
-        padding: 2px 8px;
-      }
-      #legend button.off { opacity: 0.35; }
-      .swatch {
-        width: 10px;
-        height: 10px;
-        border-radius: 2px;
-        display: inline-block;
-      }
-    </style>
+    <title>Educational attainment</title>
   </head>
   <body>
-    <div id="hud">
-      Educational attainment<br />
-      Population age 25 and older. Click a swatch to hide it.
-      <div id="legend"></div>
-      <div id="stats"></div>
-    </div>
-    <div id="map"></div>
-    <script type="module" src="./main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

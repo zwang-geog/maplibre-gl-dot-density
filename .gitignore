@@ -1,7 +1,6 @@
 node_modules/
 dist/
 demo/dist
-demo/public/*.pmtiles
 .DS_Store
 *.log
 __pycache__/
