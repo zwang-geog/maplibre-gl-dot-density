@@ -30,7 +30,7 @@ export type WorkerInMessage = WorkerInitMessage | WorkerLoadMessage | WorkerAbor
  * ```
  * positions     Int16  [0,0,  4096,0,  4096,4096,  0,4096]
  * indices       Uint32 [0,1,2,  0,2,3]
- * featureIndex  Uint16 [0,0,0,0]          // vertex → feature 0
+ * featureIndex  Uint32 [0,0,0,0]          // vertex → feature 0
  * densities     Float32 [12.5, 8.0]       // feature 0: two groups
  * vertexCount 4, indexCount 6, featureCount 1
  * ```
@@ -63,8 +63,10 @@ export interface TileGeometryResult extends TileId {
   /**
    * Per-vertex feature id, length `vertexCount`. Values are `0 .. featureCount-1`,
    * matching rows in `densities`. One polygon’s vertices share one id.
+   * Uint32 so a single tile can index more than 65,535 polygons (all US
+   * block groups on one low-zoom tile is ~315k).
    */
-  featureIndex: Uint16Array;
+  featureIndex: Uint32Array;
   /**
    * Row-major densities: length `featureCount * fields.length` (or `featureCount`
    * if `fields` is empty). Feature `f`, field `k` is at `f * fields.length + k`.

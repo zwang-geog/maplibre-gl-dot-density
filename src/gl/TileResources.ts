@@ -1,6 +1,9 @@
 import type { TileGeometryResult } from "../worker/protocol.ts";
-
-const DENSITY_TEX_WIDTH = 1024;
+import {
+  densityAtlasLayout,
+  packDensityAtlas,
+  type DensityAtlasLayout,
+} from "./densityAtlas.ts";
 
 export class TileResources {
   readonly vao: WebGLVertexArrayObject;
@@ -11,6 +14,7 @@ export class TileResources {
   readonly indexCount: number;
   readonly extent: number;
   readonly featureCount: number;
+  readonly atlas: DensityAtlasLayout;
 
   constructor(
     private readonly gl: WebGL2RenderingContext,
@@ -42,39 +46,38 @@ export class TileResources {
     gl.enableVertexAttribArray(posLoc);
     gl.vertexAttribPointer(posLoc, 2, gl.SHORT, false, 0, 0);
 
+    // uint32 ids so a single low-zoom tile can hold every US block group
+    // (~315k) or a few million census blocks. uint16 would wrap at 65,535.
     gl.bindBuffer(gl.ARRAY_BUFFER, featureBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, tile.featureIndex, gl.STATIC_DRAW);
     gl.enableVertexAttribArray(featLoc);
-    gl.vertexAttribIPointer(featLoc, 1, gl.UNSIGNED_SHORT, 0, 0);
+    gl.vertexAttribIPointer(featLoc, 1, gl.UNSIGNED_INT, 0, 0);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, tile.indices, gl.STATIC_DRAW);
     gl.bindVertexArray(null);
 
-    const height = Math.max(1, Math.ceil(tile.featureCount / DENSITY_TEX_WIDTH));
-    const pixels = new Float32Array(DENSITY_TEX_WIDTH * height * 4);
-    const groupCount = tile.featureCount > 0 ? tile.densities.length / tile.featureCount : 1;
-    for (let f = 0; f < tile.featureCount; f++) {
-      const i = f * 4;
-      pixels[i] = tile.densities[f * groupCount] ?? 0;
-    }
-    gl.bindTexture(gl.TEXTURE_2D, densityTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
+    const atlas = densityAtlasLayout(gl, tile.featureCount);
+    this.atlas = atlas;
+    const pixels = packDensityAtlas(atlas, tile.featureCount, tile.densities);
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, densityTexture);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage3D(
+      gl.TEXTURE_2D_ARRAY,
       0,
       gl.RGBA32F,
-      DENSITY_TEX_WIDTH,
-      height,
+      atlas.texWidth,
+      atlas.layerHeight,
+      atlas.layers,
       0,
       gl.RGBA,
       gl.FLOAT,
       pixels,
     );
-    gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, null);
   }
 
   destroy(): void {

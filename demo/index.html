@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dot density — bachelor's (d_ba)</title>
+    <title>dot density — education groups</title>
     <style>
       html, body, #map { margin: 0; height: 100%; }
       #hud {
@@ -15,14 +15,35 @@
         background: rgba(255, 255, 255, 0.9);
         padding: 8px 10px;
         border-radius: 6px;
-        max-width: 22rem;
+        max-width: 24rem;
+      }
+      #legend { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+      #legend button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font: inherit;
+        cursor: pointer;
+        border: 1px solid #bbb;
+        background: #fff;
+        border-radius: 4px;
+        padding: 2px 8px;
+      }
+      #legend button.off { opacity: 0.35; }
+      .swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        display: inline-block;
       }
     </style>
   </head>
   <body>
     <div id="hud">
-      Milestone 2: stochastic dots for bachelor's density (<code>d_ba</code>).<br />
-      Lit cell = filled square. <code>k</code> halves each zoom-in from z10 (ArcGIS-like).
+      Milestone 3: five education groups. Click a swatch to hide it
+      (cells stay empty; other groups do not jump).<br />
+      Lit cell = filled square. <code>k</code> halves each zoom-in from z10.
+      <div id="legend"></div>
       <div id="stats"></div>
     </div>
     <div id="map"></div>

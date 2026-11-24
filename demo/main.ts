@@ -2,6 +2,14 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { DotDensityLayer } from "../src/index.ts";
 
+const GROUPS = [
+  { field: "d_lths", label: "< HS", color: "#d73027" },
+  { field: "d_hs", label: "HS", color: "#fc8d59" },
+  { field: "d_somecol", label: "some col", color: "#fee090" },
+  { field: "d_ba", label: "BA", color: "#91bfdb" },
+  { field: "d_grad", label: "grad", color: "#4575b4" },
+] as const;
+
 const map = new maplibregl.Map({
   container: "map",
   style: "https://tiles.openfreemap.org/styles/dark",
@@ -10,17 +18,35 @@ const map = new maplibregl.Map({
 });
 
 const layer = new DotDensityLayer({
-  id: "education-dots-ba",
+  id: "education-dots",
   source: { type: "pmtiles", url: new URL("/counties_edu.pmtiles", window.location.origin).href },
   sourceLayer: "counties",
-  fields: ["d_ba"],
-  color: [231,41,138,255],
+  fields: GROUPS.map((g) => g.field),
+  colors: GROUPS.map((g) => g.color),
   dotValue: 200,
   referenceZoom: 10,
   zoomExponent: 1,
 });
 
 const statsEl = document.getElementById("stats");
+const legendEl = document.getElementById("legend");
+const visible = GROUPS.map(() => true);
+
+if (legendEl) {
+  for (let i = 0; i < GROUPS.length; i++) {
+    const g = GROUPS[i];
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.index = String(i);
+    btn.innerHTML = `<span class="swatch" style="background:${g.color}"></span>${g.label}`;
+    btn.addEventListener("click", () => {
+      visible[i] = !visible[i];
+      btn.classList.toggle("off", !visible[i]);
+      layer.setGroupVisible(i, visible[i]);
+    });
+    legendEl.append(btn);
+  }
+}
 
 map.on("load", () => {
   map.addLayer(layer);

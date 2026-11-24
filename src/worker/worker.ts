@@ -85,7 +85,7 @@ self.onmessage = async (event: MessageEvent<WorkerInMessage>) => {
 
     const positions = concatInt16(posChunks);
     const indices = concatUint32(indexChunks);
-    const featureIndex = Uint16Array.from(featureChunks);
+    const featureIndex = Uint32Array.from(featureChunks);
     const densityOut = densities.subarray(0, featureCount * Math.max(fields.length, 1));
     const densityCopy = new Float32Array(densityOut);
 
